@@ -1,11 +1,15 @@
+import json
 from django.core.exceptions import ValidationError
 from django import forms
 from django.utils.translation import ugettext as _
+from django.contrib import admin
+from django.conf import settings
 
 from html_field.forms.widgets import HTMLWidget, AdminHTMLWidget
 from html_field.forms.widget_helper import make_toolbar_config
 from html_field.exceptions import DisallowedTagError
-from django.contrib import admin
+
+CKEDITOR_CONFIGS = dict((k, json.dumps(v)) for k, v in settings.CKEDITOR_CONFIGS.items())
 
 class HTMLField(forms.Field):
     default_error_messages = {
@@ -36,10 +40,10 @@ class HTMLField(forms.Field):
         except ImportError:
             ckeditor = None
         if (ckeditor and
-            isinstance(widget, ckeditor.widgets.CKEditor) and
-            widget.ckeditor_config == 'default'
+            isinstance(widget, ckeditor.widgets.CKEditorWidget) and
+            widget.config == 'default'
         ):
-            config = widget.get_ckeditor_config_dict()
+            config = CKEDITOR_CONFIGS
             allow_tags = self.html_cleaner.allow_tags
             new_config = make_toolbar_config(allow_tags=allow_tags)
             new_config.update(config)

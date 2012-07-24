@@ -12,15 +12,15 @@ class InPageJSMedia(forms.Media):
 		return super(InPageJSMedia, self).render_js() + in_page_js
 
 try:
-	import ckeditor.widgets
+    import ckeditor.widgets
 except ImportError:
-	ckeditor = None
+    ckeditor = None
 
 if ckeditor:
-	class HTMLWidget(ckeditor.widgets.CKEditor):
-		pass
-	class AdminHTMLWidget(admin.widgets.AdminTextareaWidget, HTMLWidget):
-		pass
+    class HTMLWidget(ckeditor.widgets.CKEditorWidget):
+        pass
+    class AdminHTMLWidget(admin.widgets.AdminTextareaWidget, HTMLWidget):
+        pass
 else:
-	HTMLWidget = forms.Textarea
-	AdminHTMLWidget = admin.widgets.AdminTextareaWidget
+    HTMLWidget = forms.Textarea
+    AdminHTMLWidget = admin.widgets.AdminTextareaWidget
